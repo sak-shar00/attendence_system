@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .qr-card {
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Student Attendance System</h1>
+
+        <form id="studentForm" class="form-inline justify-content-center mb-4" onsubmit="return false;">
+            <div class="form-group">
+                <input type="text" class="form-control mr-2" id="rollNoInput" placeholder="Enter Roll Number" required>
+                <input type="text" class="form-control mr-2" id="nameInput" placeholder="Enter Name" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="generateQRCode()">Generate QR Code</button>
+        </form>
+
+        <div id="qrCard" class="text-center" style="display: none;">
+            <div id="qrCode"></div> <!-- Change to a div for new QRCode object -->
+        </div>
+
+        <p id="attendanceMessage" class="text-center mt-3"></p>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            const rollNo = document.getElementById('rollNoInput').value.trim();
+            const name = document.getElementById('nameInput').value.trim();
+            
+            // Construct the URL for marking attendance
+            const qrUrl = `http://172.16.3.16/attendance_system/mark_attendance.php?roll_no=${encodeURIComponent(rollNo)}&name=${encodeURIComponent(name)}`;
+
+            // Generate the QR code
+            document.getElementById('qrCode').innerHTML = ""; // Clear previous QR codes
+            new QRCode(document.getElementById('qrCode'), {
+                text: qrUrl,
+                width: 200,
+                height: 200
+            });
+            
+            // Display the QR Code
+            document.getElementById('qrCard').style.display = 'block';
+            document.getElementById('attendanceMessage').innerText = `QR Code generated for ${name} (Roll No: ${rollNo})`;
+        }
+    </script>
+</body>
+</html>
